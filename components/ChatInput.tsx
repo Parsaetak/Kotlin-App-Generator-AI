@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import type { AIMode } from '../types';
 
 interface ChatInputProps {
   onSendMessage: (message: string) => void;
@@ -6,6 +7,7 @@ interface ChatInputProps {
   isLoading: boolean;
   useSearch: boolean;
   onUseSearchChange: (value: boolean) => void;
+  aiMode: AIMode;
 }
 
 
@@ -13,7 +15,7 @@ const SendIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" width="20" heig
 const AttachmentIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"> <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.59a2 2 0 0 1-2.83-2.83l8.49-8.48"></path> </svg> );
 
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onFilesUpload, isLoading, useSearch, onUseSearchChange }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onFilesUpload, isLoading, useSearch, onUseSearchChange, aiMode }) => {
   const [prompt, setPrompt] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -40,10 +42,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onFilesUplo
       if (e.target.files) {
           onFilesUpload(Array.from(e.target.files));
       }
-      // Reset the input value to allow uploading the same file again
       e.target.value = '';
   };
 
+  const placeholderText = aiMode === 'code' 
+    ? "Describe the code you want to generate..." 
+    : "Ask a question about your project...";
 
   return (
     <div className="p-4" style={{ backgroundColor: 'var(--dark-ui)', borderTop: '1px solid var(--border-color)'}}>
@@ -54,7 +58,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onFilesUplo
                 value={prompt}
                 onChange={(e) => setPrompt(e.target.value)}
                 onKeyDown={handleKeyDown}
-                placeholder="Describe your app idea or request a change..."
+                placeholder={placeholderText}
                 className="w-full p-3 pl-12 pr-14 rounded-md text-sm transition-all duration-150 ease-in-out resize-none focus:ring-0"
                 style={{
                     backgroundColor: 'var(--dark-bg)',
@@ -77,7 +81,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, onFilesUplo
                 <button
                     type="submit"
                     disabled={isLoading || !prompt.trim()}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 text-white font-bold rounded-md shadow-md transition-all duration-150 ease-in-out active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center rainbow-bg"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 h-9 w-9 text-white font-bold rounded-md shadow-md transition-all duration-150 ease-in-out active:scale-[0.95] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center rainbow-border-bg"
                     aria-label="Send message"
                 >
                     <SendIcon />

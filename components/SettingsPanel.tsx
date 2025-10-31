@@ -11,8 +11,8 @@ interface SettingsPanelProps {
 const FileIcon = () => ( <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-[var(--glow-color-1)]"> <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path> <polyline points="14 2 14 8 20 8"></polyline> </svg> );
 
 const OptionWrapper: React.FC<{label: string, children: React.ReactNode, tooltip: string}> = ({label, children, tooltip}) => (
-    <div>
-        <label className="block text-xs font-medium mb-1" style={{color: 'var(--text-secondary)'}} data-tooltip={tooltip}>
+    <div data-tooltip={tooltip}>
+        <label className="block text-xs font-medium mb-1 cursor-help" style={{color: 'var(--text-secondary)'}}>
             {label}
         </label>
         {children}
@@ -38,7 +38,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ options, onOptionC
   const isAndroid = options.projectType === 'Android App';
 
   return (
-    <aside className="w-full h-[85vh] flex-shrink-0 p-4 rounded-lg flex flex-col" style={{backgroundColor: 'var(--dark-ui)', border: '1px solid var(--border-color)'}}>
+    <aside className="w-full h-[85vh] flex-shrink-0 p-4 rounded-lg flex flex-col glowing-edge">
       <div className="pb-4 border-b" style={{borderColor: 'var(--border-color)'}}>
         <h2 className="text-lg font-bold">Project Settings</h2>
       </div>

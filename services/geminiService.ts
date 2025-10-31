@@ -1,6 +1,6 @@
 import { GoogleGenAI, Content } from "@google/genai";
-import { SYSTEM_PROMPT } from '../constants';
-import type { Message, GenerationOptions, UploadedFile } from '../types';
+import { SYSTEM_PROMPT_CODE_GENERATION, SYSTEM_PROMPT_AI_CHAT } from '../constants';
+import type { Message, GenerationOptions, UploadedFile, AIMode } from '../types';
 
 if (!process.env.API_KEY) {
   throw new Error("API_KEY environment variable is not set.");
@@ -43,7 +43,8 @@ export async function continueConversation(
   history: Message[],
   options: GenerationOptions,
   useSearch: boolean,
-  uploadedFiles: UploadedFile[]
+  uploadedFiles: UploadedFile[],
+  mode: AIMode
 ): Promise<string> {
   try {
     const geminiHistory = mapMessagesToGeminiContent(history);
@@ -54,11 +55,13 @@ export async function continueConversation(
         lastMessage.parts[0].text = constructPromptWithContext(originalPrompt, options, uploadedFiles);
     }
     
+    const systemInstruction = mode === 'code' ? SYSTEM_PROMPT_CODE_GENERATION : SYSTEM_PROMPT_AI_CHAT;
+    
     const response = await ai.models.generateContent({
       model: "gemini-2.5-pro",
       contents: geminiHistory,
       config: {
-        systemInstruction: SYSTEM_PROMPT,
+        systemInstruction: systemInstruction,
         thinkingConfig: { thinkingBudget: 32768 }
       },
       tools: useSearch ? [{googleSearch: {}}] : undefined,

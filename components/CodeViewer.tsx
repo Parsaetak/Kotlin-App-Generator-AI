@@ -61,7 +61,7 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files }) => {
 
   if (files.length === 0) {
     return (
-      <div className="rounded-lg flex flex-col items-center justify-center h-[85vh] text-center p-8" style={{backgroundColor: 'var(--dark-ui)', border: '1px solid var(--border-color)'}}>
+      <div className="rounded-lg flex flex-col items-center justify-center h-[85vh] text-center p-8 glowing-edge">
         <CodeIcon />
         <h3 className="text-xl font-bold mt-4" style={{color: 'var(--text-primary)'}}>Code Editor</h3>
         <p className="mt-2 max-w-sm" style={{color: 'var(--text-secondary)'}}>
@@ -74,13 +74,13 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files }) => {
   const activeFile = files.find(f => f.path === activeTabPath);
   
   return (
-    <div className="rounded-lg flex flex-col h-[85vh]" style={{backgroundColor: 'var(--dark-ui)', border: '1px solid var(--border-color)'}}>
+    <div className="rounded-lg flex flex-col h-[85vh] glowing-edge">
       <header className="p-2 border-b flex justify-between items-center gap-4" style={{borderColor: 'var(--border-color)'}}>
         <div className="flex overflow-x-auto" style={{backgroundColor: 'var(--dark-bg)'}}>
           {files.map(file => {
             const isActive = file.path === activeTabPath;
             return (
-                <div key={file.path} className={`relative flex items-center group border-b-2 ${isActive ? '' : 'border-transparent'}`} style={{ borderColor: isActive ? 'var(--glow-color-1)' : 'transparent', background: isActive ? 'var(--dark-ui)' : 'transparent'}}>
+                <div key={file.path} className={`relative flex items-center group border-b-2`} style={{ borderColor: isActive ? 'var(--glow-color-1)' : 'transparent', background: isActive ? 'var(--dark-ui)' : 'transparent'}}>
                     <button 
                         onClick={() => setActiveTabPath(file.path)} 
                         className={`px-3 py-1 text-sm font-semibold transition-colors whitespace-nowrap`}
@@ -97,7 +97,7 @@ export const CodeViewer: React.FC<CodeViewerProps> = ({ files }) => {
         </div>
         <button 
             onClick={handleDownloadAll}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors rainbow-bg"
+            className="flex items-center gap-2 px-3 py-1.5 rounded-md text-sm transition-colors rainbow-border-bg text-white font-bold"
             aria-label="Download all files as zip"
         >
             <ZipIcon />

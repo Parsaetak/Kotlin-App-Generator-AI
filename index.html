@@ -4,12 +4,12 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Studio: Kotlin Blueprint Generator</title>
+    <title>Kotlin App Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@600&display=swap" rel="stylesheet">
     <style>
       :root {
         --glow-color-1: #ff00de;
@@ -22,25 +22,39 @@
       }
       body {
         font-family: 'Inter', sans-serif;
+        font-weight: 600; /* semi-bold */
         background-color: var(--dark-bg);
         color: var(--text-primary);
       }
       
+      @keyframes glowing-border {
+        0% { border-color: var(--glow-color-1); box-shadow: 0 0 10px var(--glow-color-1); }
+        50% { border-color: var(--glow-color-2); box-shadow: 0 0 10px var(--glow-color-2); }
+        100% { border-color: var(--glow-color-1); box-shadow: 0 0 10px var(--glow-color-1); }
+      }
+
+      .glowing-edge {
+        border: 1px solid var(--border-color);
+        animation: glowing-border 4s linear infinite;
+        background-color: var(--dark-ui);
+      }
+
+      .rainbow-border-bg {
+        border: 2px solid transparent;
+        background-image: linear-gradient(var(--dark-ui), var(--dark-ui)), linear-gradient(90deg, #ff00de, #00f2ff, #ffea00, #ff00de);
+        background-origin: border-box;
+        background-clip: padding-box, border-box;
+        background-size: 300% 100%;
+        animation: rainbow-shine 5s linear infinite;
+      }
+      .rainbow-border-bg:hover:not(:disabled) {
+        animation-duration: 2s;
+      }
+
       @keyframes rainbow-shine {
         0% { background-position: 0% 50%; }
         50% { background-position: 100% 50%; }
         100% { background-position: 0% 50%; }
-      }
-
-      .rainbow-bg {
-        background: linear-gradient(90deg, #ff00de, #00f2ff, #ffea00, #ff00de);
-        background-size: 300% 100%;
-        animation: rainbow-shine 5s linear infinite;
-        color: white;
-        font-weight: 700;
-      }
-      .rainbow-bg:hover:not(:disabled) {
-        animation-duration: 2s; /* Speed up on hover */
       }
 
       .rainbow-text {

@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import type { AppStatus, Message } from '../types';
+import type { AppStatus, Message, AIMode } from '../types';
 import { ChatInput } from './ChatInput';
 import { ErrorDisplay } from './ErrorDisplay';
 import { LoadingSpinner } from './LoadingSpinner';
+import { ModeToggle } from './ModeToggle';
 
 interface ChatWindowProps {
   messages: Message[];
@@ -12,6 +13,8 @@ interface ChatWindowProps {
   onFilesUpload: (files: File[]) => void;
   useSearch: boolean;
   onUseSearchChange: (value: boolean) => void;
+  aiMode: AIMode;
+  onAiModeChange: (mode: AIMode) => void;
 }
 
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
@@ -20,7 +23,7 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
     return (
         <div className={`flex my-2 ${isUser ? 'justify-end' : 'justify-start'}`}>
             <div 
-                className={`max-w-xl lg:max-w-2xl px-4 py-3 rounded-2xl shadow-lg ${isUser ? 'rainbow-bg rounded-br-none' : 'rounded-bl-none'}`}
+                className={`max-w-xl lg:max-w-2xl px-4 py-3 rounded-2xl shadow ${isUser ? 'rainbow-bg text-white rounded-br-none' : 'rounded-bl-none'}`}
                 style={{backgroundColor: isUser ? '' : 'var(--dark-ui)'}}
             >
                 <p className="whitespace-pre-wrap text-sm" style={{color: isUser ? '#fff' : 'var(--text-primary)'}}>
@@ -32,7 +35,7 @@ const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
 };
 
 
-export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, status, error, onSendMessage, onFilesUpload, useSearch, onUseSearchChange }) => {
+export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, status, error, onSendMessage, onFilesUpload, useSearch, onUseSearchChange, aiMode, onAiModeChange }) => {
     const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -40,7 +43,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, status, error,
     }, [messages, status]);
     
   return (
-    <div className="rounded-lg flex flex-col h-[85vh]" style={{ backgroundColor: 'var(--dark-bg)', border: '1px solid var(--border-color)'}}>
+    <div className="rounded-lg flex flex-col h-[85vh] glowing-edge">
+        <ModeToggle activeMode={aiMode} onModeChange={onAiModeChange} />
         <div className="flex-grow p-4 space-y-1 overflow-y-auto">
             {messages.map((msg, index) => (
                 <ChatMessage key={index} message={msg} />
@@ -55,6 +59,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = ({ messages, status, error,
             isLoading={status === 'loading'}
             useSearch={useSearch}
             onUseSearchChange={onUseSearchChange}
+            aiMode={aiMode}
         />
     </div>
   );

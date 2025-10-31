@@ -8,7 +8,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 
 import { continueConversation } from './services/geminiService';
 import { parseMultiFileResponse, getConversationalPart } from './utils/parser';
-import type { AppStatus, Message, GenerationOptions, UploadedFile, GeneratedFile } from './types';
+import type { AppStatus, Message, GenerationOptions, UploadedFile, GeneratedFile, AIMode } from './types';
 
 const initialDependencies = [
     { id: 'viewmodel', name: 'ViewModel & LiveData', checked: false },
@@ -33,6 +33,7 @@ const App: React.FC = () => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [generatedFiles, setGeneratedFiles] = useState<GeneratedFile[]>([]);
   const [useSearch, setUseSearch] = useState(false);
+  const [aiMode, setAiMode] = useState<AIMode>('code');
 
 
   const handleSendMessage = useCallback(async (prompt: string) => {
@@ -44,18 +45,23 @@ const App: React.FC = () => {
     setMessages(updatedHistory);
 
     try {
-      const responseText = await continueConversation(updatedHistory, generationOptions, useSearch, uploadedFiles);
-      const newGeneratedFiles = parseMultiFileResponse(responseText);
+      const responseText = await continueConversation(updatedHistory, generationOptions, useSearch, uploadedFiles, aiMode);
       
-      let conversationalText = getConversationalPart(responseText);
-      if (newGeneratedFiles.length > 0 && !conversationalText) {
-          conversationalText = "I've generated the files you requested. You can view them in the Code Editor to the right.";
+      let conversationalText = responseText;
+      let newGeneratedFiles: GeneratedFile[] = [];
+
+      if (aiMode === 'code') {
+        newGeneratedFiles = parseMultiFileResponse(responseText);
+        conversationalText = getConversationalPart(responseText);
+        if (newGeneratedFiles.length > 0 && !conversationalText) {
+            conversationalText = "I've generated the files you requested. You can view them in the Code Editor to the right.";
+        }
       }
 
       const modelMessage: Message = { role: 'model', content: conversationalText };
       
       setMessages(prev => [...prev, modelMessage]);
-      if (newGeneratedFiles.length > 0) {
+      if (aiMode === 'code' && newGeneratedFiles.length > 0) {
         setGeneratedFiles(newGeneratedFiles);
       }
       setStatus('success');
@@ -67,7 +73,7 @@ const App: React.FC = () => {
       setMessages(updatedHistory); // Revert to user message on error
       setStatus('error');
     }
-  }, [messages, generationOptions, useSearch, uploadedFiles]);
+  }, [messages, generationOptions, useSearch, uploadedFiles, aiMode]);
 
   const handleFilesUpload = useCallback((files: File[]) => {
     const newUploadedFiles: UploadedFile[] = [];
@@ -118,6 +124,8 @@ const App: React.FC = () => {
               onFilesUpload={handleFilesUpload}
               useSearch={useSearch}
               onUseSearchChange={setUseSearch}
+              aiMode={aiMode}
+              onAiModeChange={setAiMode}
             />
           </div>
           <div className="lg:col-span-4">

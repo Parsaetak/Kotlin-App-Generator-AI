@@ -32,16 +32,16 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ title, code }) => {
   }, [code]);
 
   return (
-    <div className="overflow-hidden" style={{backgroundColor: 'var(--as-dark-ui)'}}>
+    <div className="overflow-hidden">
       {title && (
-          <div className="px-4 py-2 flex justify-between items-center" style={{backgroundColor: '#313335', color: 'var(--as-text-secondary)'}}>
+          <div className="px-4 py-2 flex justify-between items-center" style={{backgroundColor: '#313335', color: 'var(--text-secondary)'}}>
             <span className="text-sm font-semibold">{title}</span>
             <button
               onClick={handleCopy}
               className={`px-3 py-1.5 text-xs font-bold rounded-md flex items-center gap-2 transition-colors duration-200 ${
                 isCopied
                   ? 'bg-green-600 text-white'
-                  : 'bg-[var(--as-dark-ui)] hover:bg-[var(--as-border)]'
+                  : 'bg-[var(--dark-ui)] hover:bg-[var(--border-color)]'
               }`}
             >
               {isCopied ? <CheckIcon /> : <CopyIcon />}
@@ -50,7 +50,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ title, code }) => {
           </div>
       )}
       <div className="p-4 overflow-x-auto">
-        <pre className="text-sm whitespace-pre-wrap break-all" style={{color: 'var(--as-text)'}}>
+        <pre className="text-sm whitespace-pre-wrap break-all" style={{color: 'var(--text-primary)'}}>
           <code>{code}</code>
         </pre>
       </div>
