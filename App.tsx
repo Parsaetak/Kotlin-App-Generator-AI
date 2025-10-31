@@ -7,7 +7,7 @@ import { CodeViewer } from './components/CodeViewer';
 import { SettingsPanel } from './components/SettingsPanel';
 
 import { continueConversation } from './services/geminiService';
-import { parseMultiFileResponse, getConversationalPart } from './utils/parser';
+import { parseMultiFileResponse, getConversationalPart, cleanAIMessage } from './utils/parser';
 import type { AppStatus, Message, GenerationOptions, UploadedFile, GeneratedFile, AIMode } from './types';
 
 const initialDependencies = [
@@ -47,15 +47,18 @@ const App: React.FC = () => {
     try {
       const responseText = await continueConversation(updatedHistory, generationOptions, useSearch, uploadedFiles, aiMode);
       
-      let conversationalText = responseText;
+      let conversationalText = '';
       let newGeneratedFiles: GeneratedFile[] = [];
 
       if (aiMode === 'code') {
         newGeneratedFiles = parseMultiFileResponse(responseText);
-        conversationalText = getConversationalPart(responseText);
+        const rawConversationalPart = getConversationalPart(responseText);
+        conversationalText = cleanAIMessage(rawConversationalPart);
         if (newGeneratedFiles.length > 0 && !conversationalText) {
             conversationalText = "I've generated the files you requested. You can view them in the Code Editor to the right.";
         }
+      } else {
+        conversationalText = cleanAIMessage(responseText);
       }
 
       const modelMessage: Message = { role: 'model', content: conversationalText };

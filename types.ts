@@ -14,7 +14,7 @@ export interface UploadedFile {
 
 export type MessageRole = 'user' | 'model';
 
-// FIX: Added 'CodeBlocks' type to represent the structure of generated code files, resolving an error in CodeOutput.tsx.
+// FIX: Define and export the CodeBlocks type, which was missing. This type is used in CodeOutput.tsx and is part of the Message interface for representing structured code responses from the AI.
 export interface CodeBlocks {
   kotlin: string;
   xml: string;
@@ -23,18 +23,17 @@ export interface CodeBlocks {
 export interface Message {
   role: MessageRole;
   content: string;
-  // FIX: Added optional 'codeBlocks' property to allow model messages to carry structured code, which is used by BlueprintCard.tsx.
+  // FIX: Add the optional `codeBlocks` property to support messages that contain structured code, as used in BlueprintCard.tsx.
   codeBlocks?: CodeBlocks;
 }
 
-// FIX: Added 'Conversation' type to define the structure for stored chat sessions, resolving errors in BlueprintCard.tsx, BlueprintGallery.tsx, ConversationCard.tsx, and ConversationHistory.tsx.
+// FIX: Define and export the Conversation type, which was missing. This is used across multiple components (BlueprintCard, BlueprintGallery, ConversationCard, ConversationHistory) to represent a chat session.
 export interface Conversation {
   id: string;
   title: string;
-  createdAt: number;
   messages: Message[];
+  createdAt: number;
 }
-
 
 export type ProjectType = 'Android App' | 'Ktor Server' | 'Compose for Desktop' | 'Kotlin Library';
 

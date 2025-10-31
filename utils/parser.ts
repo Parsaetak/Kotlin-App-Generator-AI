@@ -36,3 +36,13 @@ export function getConversationalPart(text: string): string {
     }
     return text.substring(0, firstFileIndex).trim();
 }
+
+/**
+ * Cleans the AI's message by removing common markdown formatting for a cleaner display.
+ * @param {string} text - The raw text output from the Gemini API.
+ * @returns {string} The cleaned text.
+ */
+export function cleanAIMessage(text: string): string {
+    // Removes bolding and italicizing asterisks
+    return text.replace(/\*/g, '');
+}
