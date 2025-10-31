@@ -1,0 +1,5 @@
+{
+  "name": "Kotlin App Generator",
+  "description": "An AI-powered tool that takes your app idea and generates complete, production-grade code for any Kotlin application, including Android, Ktor servers, and more, using the Gemini API.",
+  "requestFramePermissions": []
+}
